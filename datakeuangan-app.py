@@ -3,6 +3,42 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Catatan Kas Bulanan", page_icon="📒", layout="centered")
 
+# ==== GANTI PASSWORD DI SINI ====
+APP_PASSWORD = "123"
+# =================================
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+
+def cek_password():
+    if st.session_state.get("password_input", "") == APP_PASSWORD:
+        st.session_state.authenticated = True
+        st.session_state.password_input = ""
+    else:
+        st.session_state.authenticated = False
+        st.session_state.login_error = True
+
+
+if not st.session_state.authenticated:
+    st.markdown(
+        "<h2 style='text-align:center;margin-top:60px;'>🔒 Catatan Kas Bulanan</h2>"
+        "<p style='text-align:center;color:#888;'>Masukkan password untuk membuka catatan.</p>",
+        unsafe_allow_html=True,
+    )
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.text_input(
+            "Password",
+            type="password",
+            key="password_input",
+            on_change=cek_password,
+            placeholder="Masukkan password",
+        )
+        if st.session_state.get("login_error"):
+            st.error("Password salah, coba lagi.")
+    st.stop()
+
 HTML = r"""<!DOCTYPE html>
 <html lang="id">
 <head>
